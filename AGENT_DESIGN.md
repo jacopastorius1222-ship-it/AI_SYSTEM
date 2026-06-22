@@ -1,51 +1,56 @@
-AIエージェント設計図
-目的
-人間の作業を最小限にしながら、
-株初心者向けInstagram投稿の品質を向上させる。
+# AIエージェント設計図
 
-使用ファイル
-MASTER_RULE.md
-INSTAGRAM_RULE.md
-REVIEW_CHECKLIST.md
+## 最優先ルール
 
-AIの役割
-ChatGPT
-ライター担当
-ルールをもとに投稿を作成する。
+PROJECT_RULE.md を最優先ルールとする。
 
-Claude
-Instagram編集長
-投稿を採点する。
-改善点のみ指摘する。
+MASTER_RULE.md、INSTAGRAM_RULE.md、REVIEW_CHECKLIST.md は参考元だが、実行時は PROJECT_RULE.md を優先する。
+
+---
+
+## 役割
+
+### Codex
+
+制作担当。
+
+PROJECT_RULE.md を確認して、Instagram投稿・キャプション・ハッシュタグ・画像・リールを作成する。
+
+### Claude
+
+Instagram編集長。
+
+Codexの作成物を PROJECT_RULE.md に従ってレビューする。
+
 良い点は不要。
-改善案を最低5個提案する。
 
-投稿作成フロー
-STEP1
-人間がテーマを入力
-↓
-STEP2
-ChatGPTが投稿作成
-↓
-STEP3
-Claudeが編集長として採点
-↓
-STEP4
-改善点を反映
-↓
-STEP5
-完成
+改善点のみ3個以上出す。
 
-Claudeの評価基準
-・初心者向けか
-・共感できるか
-・保存したくなるか
-・読みやすいか
-・CTAがあるか
-・イラスト案が適切か
+### ユーザー
 
-最終目標
-人間は
-テーマ入力
-最終確認
-のみ行う。
+最終判断担当。
+
+Codexの作成物とClaudeのレビューを確認し、採用する修正だけをCodexへ戻す。
+
+---
+
+## 基本フロー
+
+1. Codexが PROJECT_RULE.md を確認する
+2. Codexが1日分のInstagram投稿を作成する
+3. ClaudeがPROJECT_RULE.mdに従ってレビューする
+4. ユーザーが採用する修正を選ぶ
+5. Codexが修正版を作成する
+6. ユーザーが最終確認する
+
+---
+
+## 注意点
+
+初心者あるある投稿は6コマ漫画1枚完結。
+
+初心者あるある投稿でイラスト案②③を要求しない。
+
+リール1枚目には答えを入れない。
+
+改善案は3個以上に統一する。
