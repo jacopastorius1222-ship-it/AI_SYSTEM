@@ -10,29 +10,23 @@
 
 本プロジェクトでは、**GitHub上の AI_SYSTEM リポジトリを唯一の正式ルール管理場所（Single Source of Truth）**とする。
 
-すべてのAIは作業開始前に **PROJECT_RULE.md** を最優先で確認すること。
+すべてのAIは作業開始前に **PROJECT_RULE.md** を最優先で確認する。
 
-ローカルファイルよりGitHub最新版を優先する。
+GitHubは**ルールを参照する場所**であり、通常運用ではAIは更新しない。
 
 ---
 
 # ファイル優先順位
 
-| ファイル            | 優先順位  | 用途              |
-| --------------- | ----- | --------------- |
-| PROJECT_RULE.md | ★★★★★ | 全AI共通ルール        |
-| CONTENT_RULE.md | ★★★★☆ | 投稿作成ルール（将来追加予定） |
-| AGENT_DESIGN.md | ★★★☆☆ | AI役割定義          |
-
-旧ファイル
-
-* MASTER_RULE.md
-* INSTAGRAM_RULE.md
-* REVIEW_CHECKLIST.md
-
-はPROJECT_RULE.mdへ統合済み。
-
-参照しない。
+| ファイル            | 用途              |
+| --------------- | --------------- |
+| PROJECT_RULE.md | 全AI共通ルール（最優先）   |
+| CONTENT_RULE.md | Claude制作ルール     |
+| IMAGE_RULE.md   | Codex画像制作ルール    |
+| STYLE_GUIDE.md  | ブランド・世界観・キャラクター |
+| REVIEW_RULE.md  | レビュー基準          |
+| AGENT_DESIGN.md | AI役割定義          |
+| README.md       | プロジェクト説明        |
 
 ---
 
@@ -42,11 +36,9 @@
 
 担当
 
-・Instagram全体設計
+・月間テーマ選定
 
-・月間テーマ決定
-
-・週間テーマ決定
+・週間テーマ選定
 
 ・1日分テーマ選定
 
@@ -64,54 +56,51 @@
 
 参照
 
-PROJECT_RULE.md（最優先）
+・PROJECT_RULE.md（最優先）
 
-CONTENT_RULE.md（存在する場合）
+・CONTENT_RULE.md
+
+・STYLE_GUIDE.md
 
 担当しない
 
 ・画像生成
 
-・動画編集
+・画像編集
 
-・画像サイズ変更
+・動画編集
 
 ---
 
-## Codex（制作AI）
+## Codex（画像制作AI）
 
 担当
 
-・Claudeが作成した画像設計書を忠実に画像化
+・Claudeの画像設計書を画像化する
 
-・画像サイズ確認
+・画像サイズ調整
 
-・1080×1350
+・画像品質維持
 
-・1080×1920
+・完成画像の提出
 
-への補正
-
-・保存
-
-・GitHub更新
+・Claudeが作成したタイトル・キャプション・ハッシュタグを**変更せずそのまま表示する**
 
 参照
 
-画像生成前に
+・PROJECT_RULE.md
 
-・PROJECT_RULE
-・IMAGE_RULE
+・IMAGE_RULE.md
+
+・STYLE_GUIDE.md
+
 ・Claude画像設計書
-
-この3つを確認する。
-
-どれか不足している場合は
-生成を開始しない。
 
 担当しない
 
 ・テーマ変更
+
+・タイトル変更
 
 ・キャプション変更
 
@@ -119,25 +108,29 @@ CONTENT_RULE.md（存在する場合）
 
 ・レビュー
 
+・GitHub更新
+
 ---
 
-## ChatGPT（品質管理AI）
+## ChatGPT（システム設計・品質管理AI）
 
 担当
 
 ・画像品質確認
 
-・デザイン改善
+・ブランド維持
 
-・Instagram運営改善提案
+・GitHubルール改善
 
 ・AIワークフロー改善
 
-・GitHub構成改善
+・運営改善提案
 
 参照
 
-PROJECT_RULE.md
+・PROJECT_RULE.md
+
+・STYLE_GUIDE.md
 
 担当しない
 
@@ -145,11 +138,7 @@ PROJECT_RULE.md
 
 ・キャプション作成
 
-・ハッシュタグ作成
-
 ・画像生成（通常運用）
-
-・レビュー採点
 
 ---
 
@@ -175,17 +164,19 @@ Codex
 
 ・画像生成
 
-・サイズ確認
+・画像品質確認
 
-・保存
+・Claude作成のタイトル・キャプション・ハッシュタグをそのまま表示
 
 ↓
 
 ChatGPT
 
-・画像品質確認
+・品質確認
 
 ・改善提案
+
+・GitHubルール改善
 
 ↓
 
@@ -197,27 +188,27 @@ ChatGPT
 
 # 各AIが参照するルール
 
-| AI      | 参照ファイル                               |
-| ------- | ------------------------------------ |
-| Claude  | PROJECT_RULE.md（最優先）・CONTENT_RULE.md |
-| Codex   | PROJECT_RULE.md・Claude画像設計書          |
-| ChatGPT | PROJECT_RULE.md                      |
+| AI      | 参照ファイル                                                   |
+| ------- | -------------------------------------------------------- |
+| Claude  | PROJECT_RULE.md・CONTENT_RULE.md・STYLE_GUIDE.md           |
+| Codex   | PROJECT_RULE.md・IMAGE_RULE.md・STYLE_GUIDE.md・Claude画像設計書 |
+| ChatGPT | PROJECT_RULE.md・STYLE_GUIDE.md                           |
 
 ---
 
 # 人間が行うこと
 
-人間が行う作業は原則3つのみ。
-
 ① Claudeへ
 
-「Instagram投稿を1日分作成してください」
+「GitHubのルールに従ってInstagram投稿を1日分作成してください」
 
 と依頼する。
 
-② Codexが作成した画像を確認する。
+② Claudeの内容をCodexへ渡す。
 
-③ Instagramへ投稿する。
+③ Codexが作成した画像を確認する。
+
+④ Instagramへ投稿する。
 
 ---
 
@@ -227,10 +218,10 @@ Claudeは企画責任者である。
 
 CodexはClaudeが作成した内容を変更せず制作する。
 
-ChatGPTは画像品質と運営改善のみ担当する。
+Codexはキャプション・ハッシュタグを新規作成せず、Claudeが作成した内容をそのまま表示する。
 
-ルール変更は必ずGitHubのPROJECT_RULE.mdを更新する。
+ChatGPTはGitHubルール改善・品質改善・運営改善を担当する。
+
+GitHubはルール管理専用とし、通常運用ではAIは更新しない。
 
 すべてのAIはGitHub最新版を最優先で参照する。
-
-GitHubが唯一の正式ルールとする。
