@@ -98,9 +98,16 @@ CONTENT_RULE.md（存在する場合）
 
 参照
 
-PROJECT_RULE.md
+画像生成前に
 
-Claudeが作成した画像設計書
+・PROJECT_RULE
+・IMAGE_RULE
+・Claude画像設計書
+
+この3つを確認する。
+
+どれか不足している場合は
+生成を開始しない。
 
 担当しない
 
