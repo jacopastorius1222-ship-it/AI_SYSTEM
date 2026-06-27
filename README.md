@@ -1,6 +1,6 @@
 # AI_SYSTEM
 
-Instagram株初心者向けコンテンツ制作をAIで効率化するための共通ルール管理リポジトリです。
+Instagramで株初心者向けコンテンツを効率よく制作するためのAI運用ルールを管理するリポジトリです。
 
 ---
 
@@ -8,12 +8,17 @@ Instagram株初心者向けコンテンツ制作をAIで効率化するための
 
 2028年夏までに現在の仕事を卒業する。
 
-導線
+Instagramを起点に、株初心者が楽しく学べる環境を作る。
+
+---
+
+# コンテンツ導線
 
 Instagram
+
 ↓
 
-株特訓アプリ
+無料株特訓アプリ
 
 ↓
 
@@ -27,26 +32,89 @@ note
 
 # AI構成
 
-Claude
-・企画
+## Claude（編集長）
+
+担当
+
 ・テーマ選定
-・文章作成
-・画像設計書
+
+・投稿企画
+
+・タイトル作成
+
+・キャプション作成
+
+・ハッシュタグ作成
+
+・画像設計書作成
+
+・リール構成
+
 ・セルフレビュー
 
-↓
+---
 
-Codex
+## Codex（画像制作）
+
+担当
+
 ・画像生成
-・画像サイズ確認
-・保存
+
+・画像サイズ調整
+
+・画像品質維持
+
+・Claudeが作成したタイトル・キャプション・ハッシュタグを変更せず表示
+
+---
+
+## ChatGPT（システム設計・品質管理）
+
+担当
+
+・GitHubルール改善
+
+・画像品質改善
+
+・ブランド品質維持
+
+・AIワークフロー改善
+
+・Instagram運営改善
+
+---
+
+# ワークフロー
+
+① Claude
 
 ↓
 
-ChatGPT
-・画像品質確認
-・改善提案
-・運営改善
+投稿内容作成
+
+↓
+
+② Codex
+
+↓
+
+画像生成
+
+↓
+
+③ ChatGPT
+
+↓
+
+品質改善・運用改善
+
+↓
+
+④ 人間
+
+↓
+
+Instagramへ投稿
 
 ---
 
@@ -54,40 +122,23 @@ ChatGPT
 
 すべてのAIは作業開始前に
 
-PROJECT_RULE.md
+**PROJECT_RULE.md**
 
 を最優先で確認すること。
 
-PROJECT_RULE.mdが最新版ルールであり、
-
-GitHubを唯一の正式ルール管理場所（Single Source of Truth）
-
-とする。
+GitHubを唯一の正式ルール管理場所（Single Source of Truth）とする。
 
 ---
 
-# 現在の主要ファイル
+# 現在の構成
 
-PROJECT_RULE.md
-Instagram制作ルール
-
-AGENT_DESIGN.md
-AI役割分担
-
-README.md
-リポジトリ説明
-
----
-
-# 今後追加予定
-
-CONTENT_RULE.md
-
-IMAGE_RULE.md
-
-REVIEW_RULE.md
-
-ANALYTICS_RULE.md
+* PROJECT_RULE.md（全AI共通ルール）
+* CONTENT_RULE.md（Claude制作ルール）
+* IMAGE_RULE.md（Codex画像制作ルール）
+* STYLE_GUIDE.md（ブランド・デザインルール）
+* REVIEW_RULE.md（レビュー基準）
+* AGENT_DESIGN.md（AI役割分担）
+* README.md（本ファイル）
 
 ---
 
@@ -95,16 +146,36 @@ ANALYTICS_RULE.md
 
 ① Claudeへ
 
-「Instagram投稿を1日分作成してください」
+「GitHubのルールに従ってInstagram投稿を1日分作成してください」
 
 ↓
 
-② Codexが画像を制作
+② Claudeの内容をCodexへ渡す
 
 ↓
 
-③ ChatGPTが品質確認
+③ Codexが画像を生成する
 
 ↓
 
-④ 人間がInstagramへ投稿
+④ 人間が内容を確認する
+
+↓
+
+⑤ Instagramへ投稿
+
+---
+
+# 運用方針
+
+・PROJECT_RULE.md を最優先とする
+
+・ブランドデザインは STYLE_GUIDE.md を最優先とする
+
+・Claudeは文章を担当する
+
+・Codexは画像を担当する
+
+・ChatGPTはシステム改善・品質改善を担当する
+
+・ルールは実運用で改善点が見つかった場合のみ更新する
