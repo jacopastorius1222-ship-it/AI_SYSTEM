@@ -88,8 +88,6 @@ NG画像と同じ間違いは繰り返さないでください。
 
 # ChatGPT Review
 
-# ChatGPT Review
-
 GitHub最新版ルールを必ず参照してください。
 
 README.md
