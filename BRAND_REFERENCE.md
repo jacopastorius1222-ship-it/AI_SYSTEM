@@ -543,3 +543,24 @@ ChatGPT
 同じシリーズだと一瞬で分かること。
 
 これをブランド完成条件とする。
+
+# Brand_Referenceの役割
+
+Brand_Referenceは参考資料ではない。
+
+Brand_Referenceは完成見本である。
+
+画像生成AIは
+Brand_Referenceをそのまま再現することを最優先とする。
+
+Claude設計書の内容は
+Brand_Referenceの中へ入れる。
+
+Brand_Referenceを変更して
+設計書を再現してはならない。
+
+OK_SAMPLEは絶対テンプレートである。
+
+参考ではない。
+
+完全コピーする対象である。
