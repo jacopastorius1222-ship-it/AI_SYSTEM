@@ -1,208 +1,43 @@
-# Claude
-
-GitHub最新版ルールを必ず参照してください。
-
-PROJECT_RULE.md
-CONTENT_RULE.md
-STYLE_GUIDE.md
-BRAND_REFERENCE.md
-AGENT_DESIGN.md
-claude.md
-
-1日分のInstagram投稿を作成してください。
-
-月間テーマに沿って作成してください。
-
-出力順はGitHubルール通りにしてください。
-
-①タイトル
-②キャプション
-③ハッシュタグ
-④画像設計書
-
-キャプションとハッシュタグは、そのままInstagramへコピペできる完成版で出力してください。
-
-ブランドデザインの変更は禁止です。
-
----
-
-# Codex
-
-GitHub最新版ルールを必ず参照してください。
-
-PROJECT_RULE.md
-IMAGE_RULE.md
-STYLE_GUIDE.md
-BRAND_REFERENCE.md
-IMAGE_CHECKLIST.md
-AGENT_DESIGN.md
-
-添付するClaudeの画像設計書に従って画像を制作してください。
-
-ブランドデザインは変更しないでください。
-
-変更してよいのは
-
-・表情
-・右手左手
-・ポーズ
-・視線
-・吹き出し
-・チャート内容
-
-のみです。
-
-キャラクター
-クマ
-背景
-レイアウト
-余白
-色
-線画
-塗り
-世界観
-タイトルデザイン
-
-は変更禁止です。
-
-Brand_Referenceフォルダ内のOK画像を基準に制作してください。
-
-NG画像と同じ間違いは繰り返さないでください。
-
-画像完成後はIMAGE_CHECKLIST.mdを実施し、
-
-・ブランド品質
-・教材品質
-・チャート品質
-
-すべて100％確認してから納品してください。
-
-納品時はClaudeが作成した
-
-①タイトル
-②キャプション
-③ハッシュタグ
-
-を一切変更せず、そのまま表示してください。
----
-
-# ChatGPT Review
-
-GitHub最新版ルールを必ず参照してください。
-
-README.md
-PROJECT_RULE.md
-CONTENT_RULE.md
-IMAGE_RULE.md
-STYLE_GUIDE.md
-REVIEW_RULE.md
-AGENT_DESIGN.md
-CLAUDE.md
-BRAND_REFERENCE.md
-
-以下の内容をレビューしてください。
-
-・文章
-・イラスト
-・チャート
-・レイアウト
-・ブランド品質
-・教材品質
-・Instagram品質
-
-レビュー基準はGitHub最新版ルールのみとします。
-
-推測ではなく、
-GitHubルールとの一致・不一致だけを判断してください。
-
-## 出力ルール
-
-① 総合評価（100点満点）
-
-② ルール違反一覧
-
-以下の形式で出力してください。
-
-【重要度】
-★★★★★
-★★★★☆
-★★★☆☆
-
-【対象】
-
-【違反内容】
-
-【該当ルール】
-
-【理由】
-
-③ 改善優先順位
-
-最大3件まで
-
-重要度順に並べること。
-
-④ ブランド品質判定
-
-ブランド変更が発生していないか確認してください。
-
-・キャラクター
-・クマ
-・背景
-・色
-・余白
-・フォント
-・世界観
-・レイアウト
-・教材デザイン
-
-⑤ チャート品質判定
-
-以下を重点確認してください。
-
-・ローソク足
-・移動平均線
-・ゴールデンクロス
-・デッドクロス
-・出来高
-・矢印
-・丸囲み
-・説明文
-
-教材として誤解を生まないか確認してください。
-
-⑥ 教材品質判定
-
-初心者が見て
-
-「理解できる」
-「誤解しない」
-
-教材になっているか確認してください。
-
-⑦ Instagram品質判定
-
-・1枚目で止まるか
-・最後まで読みたくなるか
-・CTAは自然か
-・保存したくなるか
-
-を確認してください。
-
-## 重要
-
-ルール違反が無ければ
-
-「ルール違反なし」
-
-とだけ回答してください。
-
-改善案は出さないでください。
-
-ルール違反がある場合のみ、
-
-改善優先順位を最大3件まで出力してください。
-
-ブランドデザインの変更は禁止です。
-
-ブランドの一貫性を最優先でレビューしてください。
+## 生成プロンプト基本形
+
+Create a new original Instagram manga-style educational illustration.
+
+No readable text, no letters, no numbers, no watermark.
+
+Cute Japanese anime/manga style.
+Polished high-quality line art.
+Soft warm colors.
+Friendly beginner stock-investing comic brand.
+
+Scene:
+A cozy warm Japanese room with a wooden desk, window, bookshelf, small plant, and soft natural light.
+
+Main character:
+A beginner male character in his 20s to 30s, brown slightly messy hair, large gentle brown eyes, navy blue hoodie, approachable, expressive, not realistic, not professional-looking.
+
+Mascot:
+A cute brown bear mascot with a round body, round ears, small black eyes, rosy cheeks, soft friendly expression, standing near the main character as a supportive companion.
+
+Composition:
+Leave clean empty space at the top for a large Japanese title to be added later.
+Include clean white rounded chart boards with green borders.
+Include candlestick charts, a green moving average line, and volume bars, but no readable labels.
+Include blank speech bubbles when needed.
+Keep enough blank space for later Japanese text overlays.
+
+Mood:
+Gentle, reassuring, beginner-friendly, slightly comic, positive.
+
+Hands:
+Right hand holds the smartphone.
+Left hand is used for thinking, pointing, or reacting.
+Do not draw two right hands or two left hands.
+
+Avoid:
+No readable text.
+No broken letters.
+No investment-ad feeling.
+No scary mood.
+No realistic human style.
+No new character design.
+No dark or aggressive colors.
