@@ -564,3 +564,21 @@ OK_SAMPLEは絶対テンプレートである。
 参考ではない。
 
 完全コピーする対象である。
+
+Brand_Referenceは
+
+参考資料ではない。
+
+ブランド完成見本である。
+
+Codexは
+
+Brand_Referenceをコピーする。
+
+画像設計書は
+
+Brand_Referenceへ当てはめる。
+
+Brand_Referenceを変更して
+
+画像設計書を再現してはならない。
