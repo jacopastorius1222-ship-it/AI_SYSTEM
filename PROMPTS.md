@@ -1,43 +1,27 @@
-## 生成プロンプト基本形
+# PROMPTS.md
 
-Create a new original Instagram manga-style educational illustration.
+画像生成時は必ず
 
-No readable text, no letters, no numbers, no watermark.
+STYLE_GUIDE.md
 
-Cute Japanese anime/manga style.
-Polished high-quality line art.
-Soft warm colors.
-Friendly beginner stock-investing comic brand.
+を最優先で参照する。
 
-Scene:
-A cozy warm Japanese room with a wooden desk, window, bookshelf, small plant, and soft natural light.
+画像内には
 
-Main character:
-A beginner male character in his 20s to 30s, brown slightly messy hair, large gentle brown eyes, navy blue hoodie, approachable, expressive, not realistic, not professional-looking.
+・日本語
+・英語
+・数字
 
-Mascot:
-A cute brown bear mascot with a round body, round ears, small black eyes, rosy cheeks, soft friendly expression, standing near the main character as a supportive companion.
+を書いてはならない。
 
-Composition:
-Leave clean empty space at the top for a large Japanese title to be added later.
-Include clean white rounded chart boards with green borders.
-Include candlestick charts, a green moving average line, and volume bars, but no readable labels.
-Include blank speech bubbles when needed.
-Keep enough blank space for later Japanese text overlays.
+画像生成後に後処理で文字・チャートを追加する。
 
-Mood:
-Gentle, reassuring, beginner-friendly, slightly comic, positive.
+テーマ変更は禁止。
 
-Hands:
-Right hand holds the smartphone.
-Left hand is used for thinking, pointing, or reacting.
-Do not draw two right hands or two left hands.
+ブランド変更は禁止。
 
-Avoid:
-No readable text.
-No broken letters.
-No investment-ad feeling.
-No scary mood.
-No realistic human style.
-No new character design.
-No dark or aggressive colors.
+レイアウト変更は禁止。
+
+人物・クマ・背景はブランドを維持する。
+
+Brand_ReferenceのOK_SAMPLEを最優先に再現する。
