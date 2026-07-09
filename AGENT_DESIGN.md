@@ -2,7 +2,7 @@
 
 # AIエージェント設計書
 
-最終更新：2026-07-02
+最終更新：2026-07-09（Ver2.0）
 
 ---
 
@@ -20,6 +20,8 @@
 
 ・再現性
 
+・運用のシンプルさ
+
 を実現する。
 
 ---
@@ -28,39 +30,55 @@
 
 GitHubを唯一の正式ルール管理場所とする。
 
-すべてのAIは作業開始前に必ず以下を確認する。
+Claude（投稿作成）とClaude（レビュー）は作業開始前に必ずGitHub最新版を確認する。
 
-① PROJECT_RULE.md
+ChatGPT（画像制作）はGitHubを参照しない。
 
-② CONTENT_RULE.md
-
-③ IMAGE_RULE.md
-
-④ STYLE_GUIDE.md
-
-⑤ BRAND_REFERENCE.md
-
-⑥ REVIEW_RULE.md
+image_request.mdとcanva_text.md、および人間が添付する見本画像のみを参照する。
 
 本チャットの内容よりもGitHub最新版を優先する。
 
 ---
 
-# 3. AI構成
+# 3. 運用ルール（一言指示・最重要）
+
+人間がAIへ送る指示は次の3つのみとする。
+
+① Claude（投稿作成）
+
+「GitHub最新版ルールを参照して作成してください。」
+
+② ChatGPT（画像制作）
+
+「image_request.md と canva_text.md に従って画像を作成してください。」
+
+③ Claude（レビュー）
+
+「GitHub最新版ルールを参照してレビューしてください。」
+
+これ以外の指示文は書かない。
+
+補足・変更が必要な場合はGitHub側のルールファイルを更新することで反映する。
+
+チャット内で個別に補足しない。
+
+---
+
+# 4. AI構成
 
 人間
 
 ↓
 
-Claude
+① Claude（投稿作成）
 
 ↓
 
-Codex
+② ChatGPT（画像制作）
 
 ↓
 
-ChatGPT
+③ Claude（レビュー）
 
 ↓
 
@@ -68,15 +86,15 @@ ChatGPT
 
 ---
 
-# 4. Claude（企画・教材設計担当）
+# 5. Claude（投稿作成）
 
 ## 役割
 
-Claudeは教材設計AIである。
+Claudeは教材設計担当である。
 
-文章を書くことが仕事ではない。
+文章を書くことだけが仕事ではない。
 
-初心者向け教材を設計することが仕事である。
+初心者向け教材を設計し、後工程（ChatGPT・Claude（レビュー））が迷わない指示書を作ることが仕事である。
 
 ---
 
@@ -100,9 +118,13 @@ Claudeは教材設計AIである。
 
 ・ハッシュタグ
 
-・画像設計書
+・content.mdの出力
 
-・セルフレビュー
+・image_request.mdの出力
+
+・canva_text.mdの出力
+
+・review_request.mdの出力
 
 ---
 
@@ -120,15 +142,19 @@ Claudeは教材設計AIである。
 
 ・キャラクター変更
 
-・チャート作成
+・レビュー（別セッションのClaude（レビュー）が担当）
 
 ---
 
 ### 必ず参照するファイル
 
+README.md
+
 PROJECT_RULE.md
 
 CONTENT_RULE.md
+
+IMAGE_RULE.md
 
 STYLE_GUIDE.md
 
@@ -136,15 +162,33 @@ BRAND_REFERENCE.md
 
 ---
 
-# 5. Codex（画像制作担当）
+### 出力
+
+必ず以下4ファイルを出力する。
+
+content.md
+
+image_request.md
+
+canva_text.md
+
+review_request.md
+
+出力形式はCONTENT_RULE.mdに従う。
+
+---
+
+# 6. ChatGPT（画像制作）
 
 ## 役割
 
-Codexは画像制作担当である。
+ChatGPTは画像制作担当である。
 
 デザイナーではない。
 
 ブランド維持担当である。
+
+GitHubは参照しない。
 
 ---
 
@@ -155,8 +199,6 @@ Codexは画像制作担当である。
 ・画像修正
 
 ・画像サイズ確認
-
-・PNG保存
 
 ・ブランド維持
 
@@ -176,6 +218,22 @@ Codexは画像制作担当である。
 
 ・教材内容変更
 
+・GitHubの確認
+
+・レビュー（Ver2.0よりChatGPTはレビューを担当しない）
+
+---
+
+### 受け取るもの
+
+image_request.md
+
+canva_text.md
+
+人間が添付するBrand_Reference見本画像
+
+この範囲だけで画像制作が完結する状態にする。
+
 ---
 
 ### 修正時の原則
@@ -188,29 +246,21 @@ Codexは画像制作担当である。
 
 必要箇所だけ修正することである。
 
----
-
-### 必ず参照するファイル
-
-PROJECT_RULE.md
-
-IMAGE_RULE.md
-
-STYLE_GUIDE.md
-
-BRAND_REFERENCE.md
-
-Claude画像設計書
+詳細はIMAGE_RULE.mdに従う。
 
 ---
 
-# 6. ChatGPT（品質管理担当）
+# 7. Claude（レビュー）
 
 ## 役割
 
-ChatGPTは品質管理担当である。
+Claude（レビュー）は品質管理担当である。
 
-ブランドを守る役割を持つ。
+投稿作成を担当したClaudeとは別セッションとして扱う。
+
+GitHub最新版ルールのみを基準に判断する。
+
+Ver2.0より、レビューはChatGPTではなくClaude（レビュー）が担当する。
 
 ---
 
@@ -223,10 +273,6 @@ ChatGPTは品質管理担当である。
 ・チャートレビュー
 
 ・改善提案
-
-・GitHub改善提案
-
-・AIワークフロー改善
 
 ---
 
@@ -246,11 +292,9 @@ ChatGPTは品質管理担当である。
 
 ### 必ず参照するファイル
 
+review_request.md
+
 PROJECT_RULE.md
-
-CONTENT_RULE.md
-
-IMAGE_RULE.md
 
 STYLE_GUIDE.md
 
@@ -260,67 +304,69 @@ REVIEW_RULE.md
 
 ---
 
-# 7. 人間の役割
+# 8. Codex
 
-人間が行う作業は最小限とする。
+## 役割
 
-① Claudeへ依頼
+Codexは画像制作を担当しない。
 
-↓
-
-② Codex画像確認
-
-↓
-
-③ ChatGPTレビュー
-
-↓
-
-④ Instagram投稿
+Ver2.0より、画像品質不安定の原因がCodexの画像生成品質にあったため、画像制作はChatGPTへ移管した。
 
 ---
 
-# 8. ワークフロー
+### 担当
+
+・GitHub管理
+
+・アプリ開発（無料株特訓アプリ）
+
+・コード修正
+
+---
+
+### 担当しない
+
+・画像生成
+
+・画像修正
+
+・投稿文章の作成
+
+・ブランド判断
+
+---
+
+# 9. ワークフロー
 
 ## STEP1
 
-Claude
+Claude（投稿作成）
 
-投稿を作成する。
+「GitHub最新版ルールを参照して作成してください。」
 
-出力
-
-・タイトル
-
-・キャプション
-
-・ハッシュタグ
-
-・画像設計書
+出力：content.md／image_request.md／canva_text.md／review_request.md
 
 ---
 
 ## STEP2
 
-Codex
+ChatGPT（画像制作）
+
+「image_request.md と canva_text.md に従って画像を作成してください。」
 
 画像を制作する。
 
-文章は変更しない。
+（人間はBrand_Reference見本画像を一緒に添付する）
 
 ---
 
 ## STEP3
 
-ChatGPT
+Claude（レビュー）
 
-ブランドレビュー
+「GitHub最新版ルールを参照してレビューしてください。」
 
-教材レビュー
-
-チャートレビュー
-
-を行う。
+review_request.mdをもとにレビューする。
 
 ---
 
@@ -332,7 +378,7 @@ Instagramへ投稿する。
 
 ---
 
-# 9. AI共通ルール
+# 10. AI共通ルール
 
 全AI共通。
 
@@ -344,37 +390,7 @@ Instagramへ投稿する。
 
 ブランド維持優先。
 
----
-
-# 10. ブランド維持
-
-ブランドとは
-
-キャラクターだけではない。
-
-以下すべてを維持する。
-
-・キャラクター
-
-・クマ
-
-・背景
-
-・チャート
-
-・色
-
-・レイアウト
-
-・余白
-
-・文字サイズ
-
-・吹き出し
-
-・CTA
-
-・世界観
+ブランドの定義・変更可否はBRAND_REFERENCE.mdに従う。
 
 ---
 
@@ -440,21 +456,27 @@ Instagramへ投稿する。
 
 # 14. GitHub運用
 
-ルール変更はGitHubのみ行う。
+ルール変更はGitHubのみで行う。
 
 チャット内だけでルール変更しない。
 
 GitHub最新版を唯一の正式ルールとする。
 
+新しいルールファイルは極力追加しない。
+
+既存ファイルの更新で対応する。
+
 ---
 
 # 15. 最重要ルール
 
-Claudeは教材を設計する。
+Claude（投稿作成）は教材を設計し、後工程が迷わない指示書を作る。
 
-Codexはブランドを維持して画像を制作する。
+ChatGPTはGitHubを見なくてもブランドを維持して画像を制作する。
 
-ChatGPTは品質を守る。
+Claude（レビュー）はGitHub最新版ルールのみを基準に品質を守る。
+
+Codexは画像制作から外れ、GitHub管理とアプリ開発に専念する。
 
 それぞれが担当範囲を超えて作業してはいけない。
 
@@ -468,4 +490,4 @@ ChatGPTは品質を守る。
 
 初心者目線
 
-この順番で優先する。
+の順で優先する。
