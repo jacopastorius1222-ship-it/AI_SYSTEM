@@ -2,7 +2,7 @@
 
 # ブランド再現基準書（最重要）
 
-最終更新：2026-07-02
+最終更新：2026-07-09（Ver2.0）
 
 ---
 
@@ -316,6 +316,10 @@ STYLE_GUIDE.mdが
 
 1つでも違えば修正する。
 
+修正時、ローソク足のサイズ・本数・太さは変更禁止。
+
+変更してよいのは色・背景・ラベルのみ（詳細はIMAGE_RULE.mdに従う）。
+
 ---
 
 # 12. 情報設計
@@ -496,17 +500,29 @@ CTA
 
 # 20. AI共通ルール
 
-Claude
+Claude（投稿作成）
 
 ブランドを変更しない。
+
+ブランド変更を提案しない。
+
+ChatGPT（画像制作）
+
+ブランドを変更しない。
+
+GitHubを参照しない。人間が添付する見本画像とimage_request.md／canva_text.mdのみで再現する。
+
+Claude（レビュー）
+
+ブランド変更を提案しない。
+
+GitHub最新版ルールのみを基準にレビューする。
 
 Codex
 
-ブランドを変更しない。
+画像制作・ブランド判断を行わない。
 
-ChatGPT
-
-ブランド変更を提案しない。
+GitHub管理とアプリ開発のみ担当する。
 
 全AI共通で
 
@@ -544,20 +560,25 @@ ChatGPT
 
 これをブランド完成条件とする。
 
+---
+
 # Brand_Referenceの役割
 
 Brand_Referenceは参考資料ではない。
 
 Brand_Referenceは完成見本である。
 
-画像生成AIは
+ChatGPT（画像制作）は
+
 Brand_Referenceをそのまま再現することを最優先とする。
 
-Claude設計書の内容は
+Claudeが作成するimage_request.mdの内容は
+
 Brand_Referenceの中へ入れる。
 
 Brand_Referenceを変更して
-設計書を再現してはならない。
+
+image_request.mdの内容を再現してはならない。
 
 OK_SAMPLEは絶対テンプレートである。
 
@@ -565,20 +586,14 @@ OK_SAMPLEは絶対テンプレートである。
 
 完全コピーする対象である。
 
-Brand_Referenceは
-
-参考資料ではない。
-
-ブランド完成見本である。
-
-Codexは
+ChatGPT（画像制作）は
 
 Brand_Referenceをコピーする。
 
-画像設計書は
+image_request.mdは
 
 Brand_Referenceへ当てはめる。
 
 Brand_Referenceを変更して
 
-画像設計書を再現してはならない。
+image_request.mdを再現してはならない。
