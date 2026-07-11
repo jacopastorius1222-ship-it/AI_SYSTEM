@@ -106,9 +106,11 @@ Claudeは
 
 ⑤ IMAGE_RULE.md
 
-⑥ AGENT_DESIGN.md
+⑥ IMAGE_GENERATION_POLICY.md
 
-⑦ auto_layout.py（文字合成ロジックの現在の実装）
+⑦ AGENT_DESIGN.md
+
+⑧ auto_layout.py（文字合成ロジックの現在の実装）
 
 GitHub最新版を唯一の正式ルールとする。
 
