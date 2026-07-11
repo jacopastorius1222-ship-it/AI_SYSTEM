@@ -2,7 +2,7 @@
 
 # AIエージェント設計書
 
-最終更新：2026-07-09（Ver2.0）
+最終更新：2026-07-11（Ver3.2）
 
 ---
 
@@ -34,7 +34,7 @@ Claude（投稿作成）とClaude（レビュー）は作業開始前に必ずGi
 
 ChatGPT（画像制作）はGitHubを参照しない。
 
-image_request.mdとcanva_text.md、および人間が添付する見本画像のみを参照する。
+image_request.md（カットごとの短い指示）、IMAGE_GENERATION_POLICY.mdの要約、および人間が添付するBrand_Reference見本画像のみを参照する。
 
 本チャットの内容よりもGitHub最新版を優先する。
 
@@ -50,7 +50,7 @@ image_request.mdとcanva_text.md、および人間が添付する見本画像の
 
 ② ChatGPT（画像制作）
 
-「image_request.md と canva_text.md に従って画像を作成してください。」
+「（見本画像を添付のうえ）image_request.mdの内容に従って、このカットのイラストを1枚だけ作成してください。」
 
 ③ Claude（レビュー）
 
@@ -78,11 +78,17 @@ image_request.mdとcanva_text.md、および人間が添付する見本画像の
 
 ↓
 
+① Claude（投稿作成・文字合成）
+
+↓
+
 ③ Claude（レビュー）
 
 ↓
 
 人間
+
+Ver3.0より、②の後に「Claude（投稿作成）がauto_layout.pyで文字を合成する」工程が入る。
 
 ---
 
@@ -95,6 +101,8 @@ Claudeは教材設計担当である。
 文章を書くことだけが仕事ではない。
 
 初心者向け教材を設計し、後工程（ChatGPT・Claude（レビュー））が迷わない指示書を作ることが仕事である。
+
+Ver3.0より、ChatGPTが生成した文字なしイラストに対して、**auto_layout.pyで文字を合成する工程**も担当する。
 
 ---
 
@@ -120,9 +128,11 @@ Claudeは教材設計担当である。
 
 ・content.mdの出力
 
-・image_request.mdの出力
+・image_request.mdの出力（カットごとの短い指示・見本画像＋差分方式）
 
-・canva_text.mdの出力
+・auto_layout.pyによる画像への文字合成
+
+・text_overlay.mdの出力
 
 ・review_request.mdの出力
 
@@ -130,9 +140,9 @@ Claudeは教材設計担当である。
 
 ### 担当しない
 
-・画像生成
+・文字を含まないイラストの生成（ChatGPT担当）
 
-・画像修正
+・画像修正（ブランド・レイアウトそのものの変更）
 
 ・ブランド変更
 
@@ -156,21 +166,25 @@ CONTENT_RULE.md
 
 IMAGE_RULE.md
 
+IMAGE_GENERATION_POLICY.md
+
 STYLE_GUIDE.md
 
 BRAND_REFERENCE.md
+
+auto_layout.py
 
 ---
 
 ### 出力
 
-必ず以下4ファイルを出力する。
+必ず以下4種類を出力する。
 
 content.md
 
-image_request.md
+image_request.md（カットごと）
 
-canva_text.md
+text_overlay.md
 
 review_request.md
 
@@ -188,15 +202,15 @@ ChatGPTは画像制作担当である。
 
 ブランド維持担当である。
 
-GitHubは参照しない。
+**文字を一切描かない。** GitHubは参照しない。
 
 ---
 
 ### 担当
 
-・画像制作
+・文字を含まないイラスト制作
 
-・画像修正
+・画像修正（ブランドを維持した範囲内）
 
 ・画像サイズ確認
 
@@ -220,19 +234,32 @@ GitHubは参照しない。
 
 ・GitHubの確認
 
-・レビュー（Ver2.0よりChatGPTはレビューを担当しない）
+・文字の描画（Ver2.1で試したが、誤字・空白納品が多発したため廃止。Claudeがauto_layout.pyで合成する）
+
+・レビュー
 
 ---
 
-### 受け取るもの
+### 受け取るもの（Ver3.2で改訂）
 
-image_request.md
+・IMAGE_GENERATION_POLICY.mdの要約（新しい会話の最初に1回のみ。なぜ文字を描かないか／なぜCanvaを使わないかの経緯）
 
-canva_text.md
+・Brand_Reference見本画像（カットの型に対応するもの。人間が添付する）
 
-人間が添付するBrand_Reference見本画像
+・image_request.md（そのカットで見本と変更する点だけを書いた短いテキスト。カットごとに1つ）
 
 この範囲だけで画像制作が完結する状態にする。
+
+---
+
+### 依頼の受け取り方（重要・Ver3.2で新設）
+
+・**ZIPファイルや複数カット分をまとめたファイルでは渡さない。** 複数カット分の情報を1回のメッセージに含めると、
+　ChatGPTが処理できず固まる、または複数カットを1枚のコンタクトシートにまとめて出力してしまうことが確認されている。
+
+・**1回のメッセージ＝1カットの本文コピペのみ**とする。ファイル添付ではなくチャット本文に直接貼り付ける。
+
+・1カット完成 → 内容確認 → 次のカットの本文を送る、を1カットずつ繰り返す。
 
 ---
 
@@ -259,8 +286,6 @@ Claude（レビュー）は品質管理担当である。
 投稿作成を担当したClaudeとは別セッションとして扱う。
 
 GitHub最新版ルールのみを基準に判断する。
-
-Ver2.0より、レビューはChatGPTではなくClaude（レビュー）が担当する。
 
 ---
 
@@ -304,65 +329,45 @@ REVIEW_RULE.md
 
 ---
 
-# 8. Codex
+# 8. ワークフロー（Ver3.2で全面改訂）
 
-## 役割
-
-Codexは画像制作を担当しない。
-
-Ver2.0より、画像品質不安定の原因がCodexの画像生成品質にあったため、画像制作はChatGPTへ移管した。
-
----
-
-### 担当
-
-・GitHub管理
-
-・アプリ開発（無料株特訓アプリ）
-
-・コード修正
-
----
-
-### 担当しない
-
-・画像生成
-
-・画像修正
-
-・投稿文章の作成
-
-・ブランド判断
-
----
-
-# 9. ワークフロー
-
-## STEP1
-
-Claude（投稿作成）
+## STEP1：Claude（投稿作成）
 
 「GitHub最新版ルールを参照して作成してください。」
 
-出力：content.md／image_request.md／canva_text.md／review_request.md
+出力：content.md／image_request.md（カットごと）／text_overlay.md／review_request.md
 
 ---
 
-## STEP2
+## STEP2：ChatGPT（画像制作）への依頼
 
-ChatGPT（画像制作）
+**新しい会話を始めるとき（1回だけ）**
 
-「image_request.md と canva_text.md に従って画像を作成してください。」
+IMAGE_GENERATION_POLICY.mdの要約を送る（なぜ文字を描かないか／なぜCanvaを使わないかの経緯）。
 
-画像を制作する。
+**カットごと（カットの数だけ、1枚ずつ）**
 
-（人間はBrand_Reference見本画像を一緒に添付する）
+① そのカットの型に対応するBrand_Reference見本画像を添付する
+
+② そのカットのimage_request.md本文をそのままコピペで送る
+
+③ 1枚できあがったら、次のカットへ進む
+
+（人間がこの受け渡し作業を行う）
 
 ---
 
-## STEP3
+## STEP3：Claude（投稿作成）による文字合成
 
-Claude（レビュー）
+7枚（またはその日に必要な枚数）のイラストが揃ったら、Claudeへアップロードする。
+
+Claudeはauto_layout.pyで、text_overlay.mdの内容をイラストへ合成する。
+
+IMAGE_RULE.mdの納品前チェックリストで確認する。
+
+---
+
+## STEP4：Claude（レビュー）
 
 「GitHub最新版ルールを参照してレビューしてください。」
 
@@ -370,15 +375,13 @@ review_request.mdをもとにレビューする。
 
 ---
 
-## STEP4
-
-人間
+## STEP5：人間
 
 Instagramへ投稿する。
 
 ---
 
-# 10. AI共通ルール
+# 9. AI共通ルール
 
 全AI共通。
 
@@ -394,7 +397,7 @@ Instagramへ投稿する。
 
 ---
 
-# 11. チャート品質
+# 10. チャート品質
 
 全AI共通。
 
@@ -412,9 +415,12 @@ Instagramへ投稿する。
 
 は正確に表現する。
 
+2本の線が交差する図（ゴールデンクロス／デッドクロス等）は、パターン名だけでなく、
+交差前・交差点・交差後の位置関係を明示的に指示する（IMAGE_RULE.md 6-2章参照）。
+
 ---
 
-# 12. 修正ルール
+# 11. 修正ルール
 
 修正対象以外は変更禁止。
 
@@ -430,7 +436,7 @@ Instagramへ投稿する。
 
 ---
 
-# 13. 完成条件
+# 12. 完成条件
 
 完成とは
 
@@ -440,7 +446,7 @@ Instagramへ投稿する。
 
 ハッシュタグ
 
-画像
+画像（文字合成済み）
 
 ブランド品質
 
@@ -454,7 +460,7 @@ Instagramへ投稿する。
 
 ---
 
-# 14. GitHub運用
+# 13. GitHub運用
 
 ルール変更はGitHubのみで行う。
 
@@ -468,15 +474,15 @@ GitHub最新版を唯一の正式ルールとする。
 
 ---
 
-# 15. 最重要ルール
+# 14. 最重要ルール
 
 Claude（投稿作成）は教材を設計し、後工程が迷わない指示書を作る。
 
-ChatGPTはGitHubを見なくてもブランドを維持して画像を制作する。
+ChatGPTはGitHubを見なくてもブランドを維持して、文字を含まないイラストを制作する。
+
+Claude（投稿作成）はauto_layout.pyで正確に文字を合成する。
 
 Claude（レビュー）はGitHub最新版ルールのみを基準に品質を守る。
-
-Codexは画像制作から外れ、GitHub管理とアプリ開発に専念する。
 
 それぞれが担当範囲を超えて作業してはいけない。
 
