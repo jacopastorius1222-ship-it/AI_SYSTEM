@@ -112,6 +112,8 @@ Claudeは
 
 ⑧ auto_layout.py（文字合成ロジックの現在の実装）
 
+⑨ charts/chart_generator.py（線が交差するチャートの参考画像生成ロジック）
+
 GitHub最新版を唯一の正式ルールとする。
 
 ---
