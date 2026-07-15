@@ -184,6 +184,8 @@ BRAND_REFERENCE.md
 
 auto_layout.py
 
+charts/chart_generator.py
+
 ---
 
 ### 出力
@@ -357,11 +359,13 @@ IMAGE_GENERATION_POLICY.mdの要約を送る（なぜ文字を描かないか／
 
 **カットごと（カットの数だけ、1枚ずつ）**
 
-① そのカットの型に対応するBrand_Reference見本画像を添付する
+① 線が交差するチャートを含むカットの場合、Claudeが先に`charts/chart_generator.py`で参考チャート画像を生成する
 
-② そのカットのimage_request.md本文をそのままコピペで送る
+② そのカットの型に対応するBrand_Reference見本画像（＋線交差カットの場合は①の参考チャート画像）を添付する
 
-③ 1枚できあがったら、次のカットへ進む
+③ そのカットのimage_request.md本文をそのままコピペで送る
+
+④ 1枚できあがったら、次のカットへ進む
 
 （人間がこの受け渡し作業を行う）
 
