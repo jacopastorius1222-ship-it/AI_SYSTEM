@@ -45,9 +45,14 @@ def _sparkle(ax, cx, cy, scale, color):
 
 def _generate_perfect_order_chart(rng, n, x, out_path, rounded_border):
     """短期・中期・長期の3本の移動平均線がきれいに並ぶ（パーフェクトオーダー）形のチャートを生成する"""
-    long_ma = 50 + 14 * (x / n) ** 1.1
-    mid_ma = 52 + 20 * (x / n) ** 1.15
-    short_ma = 54 + 27 * (x / n) ** 1.2
+    base = rng.uniform(46, 54)
+    long_amt = rng.uniform(10, 18)
+    mid_amt = rng.uniform(16, 24)
+    short_amt = rng.uniform(22, 32)
+    curve = rng.uniform(1.0, 1.3)
+    long_ma = base + long_amt * (x / n) ** curve
+    mid_ma = base + 2 + mid_amt * (x / n) ** curve
+    short_ma = base + 4 + short_amt * (x / n) ** curve
 
     close = short_ma + rng.normal(0, 1.4, n)
     close[0] = short_ma[0]
@@ -89,10 +94,16 @@ def _generate_perfect_order_chart(rng, n, x, out_path, rounded_border):
 
 def _generate_slope_chart(rng, n, x, out_path, rounded_border, steep=True):
     """移動平均線の傾き(急/緩やか)で勢いの違いを見せるチャートを生成する"""
+    base = rng.uniform(46, 54)
+    phase = rng.uniform(0, 6)
     if steep:
-        ma = 50 + 40 * (x / n) ** 1.15
+        amt = rng.uniform(32, 48)
+        curve = rng.uniform(1.05, 1.3)
+        ma = base + amt * (x / n) ** curve
     else:
-        ma = 50 + 8 * (x / n) + 2 * np.sin(x / 9)
+        amt = rng.uniform(5, 12)
+        wobble = rng.uniform(1.5, 3.0)
+        ma = base + amt * (x / n) + wobble * np.sin(x / 9 + phase)
 
     close = ma + rng.normal(0, 1.6, n)
     close[0] = ma[0]
@@ -133,11 +144,17 @@ def _generate_slope_chart(rng, n, x, out_path, rounded_border, steep=True):
 
 def _generate_support_chart(rng, n, x, out_path, rounded_border):
     """価格が移動平均線に何度か近づいて跳ね返される（支持線として機能する）形のチャートを生成する"""
-    # 移動平均線：ゆるやかな右肩上がり
-    ma = 55 + 10 * (x / n) + 1.0 * np.sin(x / 14)
+    base = rng.uniform(50, 58)
+    slope_amt = rng.uniform(6, 16)
+    phase = rng.uniform(0, 6)
+    ma = base + slope_amt * (x / n) + 1.0 * np.sin(x / 14 + phase)
 
-    # タッチポイント（跳ね返る位置）を3か所指定
-    touch_idx = [int(n * 0.28), int(n * 0.55), int(n * 0.82)]
+    # タッチポイント（跳ね返る位置）を、間隔をランダムにしつつ3か所指定
+    t1 = rng.integers(int(n * 0.18), int(n * 0.35))
+    t2 = rng.integers(int(n * 0.42), int(n * 0.62))
+    t3 = rng.integers(int(n * 0.72), int(n * 0.90))
+    touch_idx = [int(t1), int(t2), int(t3)]
+    bounce_h = rng.uniform(5, 8)
 
     close = np.zeros(n)
     close[0] = ma[0] + 8
@@ -146,7 +163,7 @@ def _generate_support_chart(rng, n, x, out_path, rounded_border):
         nearest = min(touch_idx, key=lambda t: abs(t - i))
         dist = i - nearest
         if -4 <= dist <= 0:
-            target = ma[i] + 6 * (1 - (dist + 4) / 4)
+            target = ma[i] + bounce_h * (1 - (dist + 4) / 4)
         elif 0 < dist <= 6:
             target = ma[i] + 2 + dist * 1.3
         else:
@@ -202,12 +219,15 @@ def _generate_support_chart(rng, n, x, out_path, rounded_border):
 
 def _generate_kairi_chart(rng, n, x, out_path, rounded_border):
     """価格が移動平均線から大きく上に乖離していく形のチャートを生成する"""
-    # 移動平均線：ゆるやかな横ばい〜わずかな上昇
-    ma = 55 + 4 * (x / n) + 1.5 * np.sin(x / 10)
+    base = rng.uniform(50, 58)
+    slope_amt = rng.uniform(2, 7)
+    phase = rng.uniform(0, 6)
+    ma = base + slope_amt * (x / n) + 1.5 * np.sin(x / 10 + phase)
 
-    # 価格：前半は線に沿う。後半、線から大きく上に離れていく
-    gap_base = np.clip((x - n * 0.55) / (n * 0.45), 0, None)
-    gap = np.where(x < n * 0.55, 0, gap_base ** 1.6 * 22)
+    gap_start = rng.uniform(0.45, 0.68)
+    gap_amt = rng.uniform(16, 28)
+    gap_base = np.clip((x - n * gap_start) / (n * (1 - gap_start)), 0, None)
+    gap = np.where(x < n * gap_start, 0, gap_base ** 1.6 * gap_amt)
     close = ma + gap + rng.normal(0, 1.6, n)
     close[0] = ma[0]
     open_ = np.roll(close, 1)
@@ -301,15 +321,28 @@ def generate_chart(pattern="dead_cross", n=40, seed=11, out_path="chart_referenc
     if pattern == "perfect_order":
         return _generate_perfect_order_chart(rng, n, x, out_path, rounded_border)
 
-    green_base = 72 - 6 * (x / n) - 2 * np.sin(x / 12)
-    orange_base = 90 - 55 * (x / n) ** 1.3
+    g_base = rng.uniform(66, 78)
+    g_slope = rng.uniform(4, 9)
+    g_phase = rng.uniform(0, 6)
+    o_base = rng.uniform(84, 96)
+    o_drop = rng.uniform(45, 62)
+    o_curve = rng.uniform(1.15, 1.45)
+
+    def _green(xx):
+        return g_base - g_slope * (xx / n) - 2 * np.sin(xx / 12 + g_phase)
+
+    def _orange(xx):
+        return o_base - o_drop * (xx / n) ** o_curve
+
+    green_base = _green(x)
+    orange_base = _orange(x)
     if pattern == "dead_cross":
         green, orange = green_base, orange_base
     elif pattern == "golden_cross":
         # dead_crossの形をx軸方向に反転して使うことで、交差位置を中央付近に保つ
         rev = (n - 1 - x)
-        green = 72 - 6 * (rev / n) - 2 * np.sin(rev / 12)
-        orange = 90 - 55 * (rev / n) ** 1.3
+        green = _green(rev)
+        orange = _orange(rev)
     else:
         raise ValueError("pattern must be 'dead_cross' or 'golden_cross'")
 
