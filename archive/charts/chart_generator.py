@@ -43,6 +43,167 @@ def _sparkle(ax, cx, cy, scale, color):
         ax.plot([x0, x1], [y0, y1], color=color, linewidth=3.2, solid_capstyle='round', zorder=7)
 
 
+def _generate_margin_balance_chart(rng, n, x, out_path, rounded_border):
+    """価格チャート＋信用買い残・売り残の推移を比較するチャートを生成する"""
+    base = rng.uniform(55, 63)
+    drift = rng.uniform(3, 8) * (x / n) + 1.2 * np.sin(x / 10 + rng.uniform(0, 6))
+    ma = base + drift
+
+    close = ma + rng.normal(0, 1.3, n)
+    close[0] = ma[0]
+    open_ = np.roll(close, 1)
+    open_[0] = close[0] - 1
+    high = np.maximum(open_, close) + np.abs(rng.normal(1.0, 0.6, n))
+    low = np.minimum(open_, close) - np.abs(rng.normal(1.0, 0.6, n))
+    up = close >= open_
+
+    # 信用買い残：じわじわ増える／信用売り残：ほぼ横ばい（＝買い残だけが積み上がる＝将来の売り圧力）
+    buy_margin = rng.uniform(20, 26) + rng.uniform(30, 45) * (x / n) ** 1.2 + rng.normal(0, 1.5, n)
+    sell_margin = rng.uniform(14, 20) + rng.normal(0, 1.2, n)
+
+    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(11, 7),
+                                    gridspec_kw={'height_ratios': [3, 2]}, facecolor='white')
+    w = 0.32
+    for i in range(n):
+        color = '#2e8b3d' if up[i] else '#c0392b'
+        ax1.plot([i, i], [low[i], high[i]], color=color, linewidth=1.4, solid_capstyle='round', zorder=3)
+        body_h = max(abs(close[i] - open_[i]), 0.5)
+        ax1.add_patch(plt.Rectangle((i - w/2, min(open_[i], close[i])), w, body_h,
+                                     facecolor=color, edgecolor=color, linewidth=0.4, zorder=3))
+    ax1.plot(x, ma, color='white', linewidth=5.5, solid_capstyle='round', zorder=4)
+    ax1.plot(x, ma, color='#1f7a3d', linewidth=3.0, solid_capstyle='round', zorder=5)
+    ax1.axis('off')
+
+    bw = 0.36
+    ax2.bar(x - bw/2, buy_margin, width=bw, color='#ff8c1a', label='buy')
+    ax2.bar(x + bw/2, sell_margin, width=bw, color='#6b7280', label='sell')
+    gap_idx = n - 4
+    _glow(ax2, gap_idx, buy_margin[gap_idx] + 3, 500, '#ffd23f')
+    _sparkle(ax2, gap_idx, buy_margin[gap_idx] + 8, 0.7, '#ffb200')
+    ax2.axis('off')
+
+    plt.subplots_adjust(hspace=0.08, left=0.02, right=0.98, top=0.98, bottom=0.02)
+    tmp_path = out_path + ".tmp.png"
+    fig.savefig(tmp_path, dpi=170, facecolor='white')
+    plt.close(fig)
+    _finalize(tmp_path, out_path, rounded_border)
+    return out_path, (gap_idx, buy_margin[gap_idx])
+
+
+def _generate_convergence_chart(rng, n, x, out_path, rounded_border):
+    """2本の移動平均線がだんだん近づいて値動きの幅が狭くなる（収束・スクイーズ）形のチャートを生成する"""
+    base = rng.uniform(55, 63)
+    start_gap = rng.uniform(16, 24)
+    phase = rng.uniform(0, 6)
+    decay = rng.uniform(2.0, 3.2)
+
+    gap = start_gap * np.exp(-decay * (x / n))
+    drift = rng.uniform(2, 6) * (x / n) + 1.0 * np.sin(x / 11 + phase)
+    upper = base + drift + gap / 2
+    lower = base + drift - gap / 2
+
+    close = (upper + lower) / 2 + rng.normal(0, gap.mean() * 0.15 + 0.3, n)
+    close[0] = (upper[0] + lower[0]) / 2
+    open_ = np.roll(close, 1)
+    open_[0] = close[0] - 1
+    high = np.maximum(open_, close) + np.abs(rng.normal(0.9, 0.5, n))
+    low = np.minimum(open_, close) - np.abs(rng.normal(0.9, 0.5, n))
+    up = close >= open_
+
+    squeeze_idx = int(n * 0.85)
+    volume = rng.uniform(3, 5, n)
+    for i in range(squeeze_idx, n):
+        volume[i] = rng.uniform(2, 3.5)  # 収束が進むと出来高も減りやすい
+
+    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(11, 7),
+                                    gridspec_kw={'height_ratios': [3, 1]}, facecolor='white')
+    w = 0.32
+    for i in range(n):
+        color = '#2e8b3d' if up[i] else '#c0392b'
+        ax1.plot([i, i], [low[i], high[i]], color=color, linewidth=1.4, solid_capstyle='round', zorder=3)
+        body_h = max(abs(close[i] - open_[i]), 0.4)
+        ax1.add_patch(plt.Rectangle((i - w/2, min(open_[i], close[i])), w, body_h,
+                                     facecolor=color, edgecolor=color, linewidth=0.4, zorder=3))
+
+    for line_y, col in [(upper, '#ff8c1a'), (lower, '#1f7a3d')]:
+        ax1.plot(x, line_y, color='white', linewidth=6.0, solid_capstyle='round', zorder=4)
+        ax1.plot(x, line_y, color=col, linewidth=3.4, solid_capstyle='round', zorder=5)
+
+    _glow(ax1, squeeze_idx, (upper[squeeze_idx] + lower[squeeze_idx]) / 2, 500, '#ffd23f')
+    _sparkle(ax1, squeeze_idx, (upper[squeeze_idx] + lower[squeeze_idx]) / 2 + 3, 0.8, '#ffb200')
+
+    ax1.axis('off')
+
+    for i in range(n):
+        color = '#2e8b3d' if up[i] else '#c0392b'
+        ax2.bar(i, volume[i], color=color, width=0.65, edgecolor=color, linewidth=0.3)
+    ax2.axis('off')
+
+    plt.subplots_adjust(hspace=0.05, left=0.02, right=0.98, top=0.98, bottom=0.02)
+    tmp_path = out_path + ".tmp.png"
+    fig.savefig(tmp_path, dpi=170, facecolor='white')
+    plt.close(fig)
+    _finalize(tmp_path, out_path, rounded_border)
+    return out_path, (squeeze_idx, (upper[squeeze_idx] + lower[squeeze_idx]) / 2)
+
+
+def _generate_wakeup_chart(rng, n, x, out_path, rounded_border):
+    """移動平均線が横ばいから急に動き出す（トレンド発生）形のチャートを生成する"""
+    base = rng.uniform(52, 60)
+    flat_frac = rng.uniform(0.45, 0.6)
+    wobble = rng.uniform(0.8, 1.8)
+    amt = rng.uniform(22, 34)
+    curve = rng.uniform(1.2, 1.6)
+
+    flat_part = base + wobble * np.sin(x / 6 + rng.uniform(0, 6))
+    move_base = np.clip((x - n * flat_frac) / (n * (1 - flat_frac)), 0, None)
+    move_part = amt * move_base ** curve
+    ma = flat_part + np.where(x < n * flat_frac, 0, move_part)
+
+    close = ma + rng.normal(0, 1.5, n)
+    close[0] = ma[0]
+    open_ = np.roll(close, 1)
+    open_[0] = close[0] - 1
+    high = np.maximum(open_, close) + np.abs(rng.normal(1.2, 0.7, n))
+    low = np.minimum(open_, close) - np.abs(rng.normal(1.2, 0.7, n))
+    up = close >= open_
+
+    wake_idx = int(n * flat_frac)
+    volume = rng.uniform(3, 6, n)
+    for i in range(wake_idx, n):
+        volume[i] = rng.uniform(6, 10)
+
+    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(11, 7),
+                                    gridspec_kw={'height_ratios': [3, 1]}, facecolor='white')
+    w = 0.32
+    for i in range(n):
+        color = '#2e8b3d' if up[i] else '#c0392b'
+        ax1.plot([i, i], [low[i], high[i]], color=color, linewidth=1.6, solid_capstyle='round', zorder=3)
+        body_h = max(abs(close[i] - open_[i]), 0.5)
+        ax1.add_patch(plt.Rectangle((i - w/2, min(open_[i], close[i])), w, body_h,
+                                     facecolor=color, edgecolor=color, linewidth=0.5, zorder=3))
+
+    ax1.plot(x, ma, color='white', linewidth=6.5, solid_capstyle='round', zorder=4)
+    ax1.plot(x, ma, color='#1f7a3d', linewidth=3.6, solid_capstyle='round', zorder=5)
+
+    _glow(ax1, wake_idx, ma[wake_idx], 600, '#ffd23f')
+    _sparkle(ax1, wake_idx, ma[wake_idx] + 3, 0.9, '#ffb200')
+
+    ax1.axis('off')
+
+    for i in range(n):
+        color = '#2e8b3d' if up[i] else '#c0392b'
+        ax2.bar(i, volume[i], color=color, width=0.65, edgecolor=color, linewidth=0.3)
+    ax2.axis('off')
+
+    plt.subplots_adjust(hspace=0.05, left=0.02, right=0.98, top=0.98, bottom=0.02)
+    tmp_path = out_path + ".tmp.png"
+    fig.savefig(tmp_path, dpi=170, facecolor='white')
+    plt.close(fig)
+    _finalize(tmp_path, out_path, rounded_border)
+    return out_path, (wake_idx, ma[wake_idx])
+
+
 def _generate_perfect_order_chart(rng, n, x, out_path, rounded_border):
     """短期・中期・長期の3本の移動平均線がきれいに並ぶ（パーフェクトオーダー）形のチャートを生成する"""
     base = rng.uniform(46, 54)
@@ -320,6 +481,12 @@ def generate_chart(pattern="dead_cross", n=40, seed=11, out_path="chart_referenc
         return _generate_slope_chart(rng, n, x, out_path, rounded_border, steep=False)
     if pattern == "perfect_order":
         return _generate_perfect_order_chart(rng, n, x, out_path, rounded_border)
+    if pattern == "wakeup":
+        return _generate_wakeup_chart(rng, n, x, out_path, rounded_border)
+    if pattern == "convergence":
+        return _generate_convergence_chart(rng, n, x, out_path, rounded_border)
+    if pattern == "margin_balance":
+        return _generate_margin_balance_chart(rng, n, x, out_path, rounded_border)
 
     g_base = rng.uniform(66, 78)
     g_slope = rng.uniform(4, 9)
@@ -425,7 +592,7 @@ def generate_chart(pattern="dead_cross", n=40, seed=11, out_path="chart_referenc
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--pattern", choices=["dead_cross", "golden_cross", "kairi", "support_line", "slope_steep", "slope_flat", "perfect_order"], default="dead_cross")
+    parser.add_argument("--pattern", choices=["dead_cross", "golden_cross", "kairi", "support_line", "slope_steep", "slope_flat", "perfect_order", "wakeup", "convergence", "margin_balance"], default="dead_cross")
     parser.add_argument("--n", type=int, default=40)
     parser.add_argument("--seed", type=int, default=11)
     parser.add_argument("--out", default="chart_reference.png")
